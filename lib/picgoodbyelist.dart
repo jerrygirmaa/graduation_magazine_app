@@ -9,6 +9,9 @@ import 'package:myapp/picgoodbyegrid.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 
 class PicGoodByeList extends StatefulWidget {
+  final int year;
+
+  const PicGoodByeList({super.key, required this.year});
   @override
   _PicGoodByeListState createState() => _PicGoodByeListState();
 }
@@ -19,8 +22,18 @@ class _PicGoodByeListState extends State<PicGoodByeList> {
   @override
   void initState() {
     super.initState();
+    String collectionName;
+    if (widget.year == 2014) {
+      collectionName = "gcdinner";
+    } else if (widget.year == 2015) {                                                                                  
+      collectionName = "2gcdinner";
+    } else if (widget.year == 2016) {
+      collectionName = "3gcdinner";
+    } else {
+      collectionName = "gcdinner${widget.year - 2013}";
+    }
     stream = FirebaseFirestore.instance
-        .collection("gcdinner")
+        .collection(collectionName)
         .orderBy("number", descending: false)
         .snapshots();
   }
@@ -45,7 +58,6 @@ class _PicGoodByeListState extends State<PicGoodByeList> {
               onPressed: () {
                 Navigator.pop(context);
               },
-              // tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
             );
           },
         ),
@@ -56,7 +68,6 @@ class _PicGoodByeListState extends State<PicGoodByeList> {
         centerTitle: true,
         actions: [
           IconButton(
-            // tooltip: 'Grid',
             enableFeedback: true,
             icon: const Icon(
               CupertinoIcons.square_list,
@@ -70,7 +81,9 @@ class _PicGoodByeListState extends State<PicGoodByeList> {
                       //   context,
                       //   MaterialPageRoute(
                       //     builder: (context) =>
-                      PicGoodByeGrid(),
+                      PicGoodByeGrid(
+                    year: widget.year,
+                  ),
                 ),
               );
             },

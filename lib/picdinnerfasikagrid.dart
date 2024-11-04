@@ -10,6 +10,9 @@ import 'package:myapp/viewimage.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 
 class PicDinnerFasikaGrid extends StatefulWidget {
+  final int year;
+
+  const PicDinnerFasikaGrid({super.key, required this.year});
   @override
   _PicDinnerFasikaGridState createState() => _PicDinnerFasikaGridState();
 }
@@ -19,9 +22,18 @@ class _PicDinnerFasikaGridState extends State<PicDinnerFasikaGrid> {
   @override
   void initState() {
     super.initState();
-
+    String collectionName;
+    if (widget.year == 2014) {
+      collectionName = "gcdinnerfasika";
+    } else if (widget.year == 2015) {
+      collectionName = "2gcdinnerfasika";
+    } else if (widget.year == 2016) {
+      collectionName = "3gcdinnerfasika";
+    } else {
+      collectionName = "gcdinnerfasika${widget.year - 2013}";
+    }
     stream = FirebaseFirestore.instance
-        .collection("gcdinnerfasika")
+        .collection(collectionName)
         .orderBy("number", descending: false)
         .snapshots();
   }
@@ -68,7 +80,9 @@ class _PicDinnerFasikaGridState extends State<PicDinnerFasikaGrid> {
                 Navigator.pushReplacement<void, void>(
                     context,
                     MaterialPageRoute<void>(
-                        builder: (context) => PicDinnerFasikaList()));
+                        builder: (context) => PicDinnerFasikaList(
+                              year: widget.year,
+                            )));
               },
             ),
             IconButton(
@@ -109,7 +123,6 @@ class _PicDinnerFasikaGridState extends State<PicDinnerFasikaGrid> {
                           builder: (BuildContext context,
                               AsyncSnapshot<QuerySnapshot> snapshot) {
                             if (!snapshot.hasData) {
-                              // return const Text("Something went wrong");
                               print("loading");
                               return const Center(
                                   child: CircularProgressIndicator());
@@ -126,10 +139,6 @@ class _PicDinnerFasikaGridState extends State<PicDinnerFasikaGrid> {
                                               bottom: width / 30,
                                               left: width / 60,
                                               right: width / 60),
-
-                                          // margin: const EdgeInsets.all(0),
-                                          // width: 165.0,
-                                          // decoration: BoxDecoration(),
                                           child: AspectRatio(
                                               aspectRatio: 1 / 1,
                                               child: CachedNetworkImage(
@@ -178,8 +187,6 @@ class _PicDinnerFasikaGridState extends State<PicDinnerFasikaGrid> {
                                             MaterialPageRoute(
                                                 builder: (context) => ViewImage(
                                                     document['image'])));
-
-                                        // Navigator.push(context, MaterialPageRoute(builder: (context) => goto));
                                       },
                                     ),
                                   );

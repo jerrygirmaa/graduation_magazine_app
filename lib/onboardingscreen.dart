@@ -69,12 +69,6 @@ class _OnBoardingScreenState extends State<OnBoardingScreen>
                       ),
                     ),
                   ),
-                  // const Expanded(
-                  //   // flex: 8,
-                  //   child: SizedBox(
-                  //     height: 10,
-                  //   ),
-                  // ),
                   Expanded(
                     flex: 1,
                     child: Container(

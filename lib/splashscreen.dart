@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:myapp/homepage.dart';
+import 'package:myapp/choose_batch.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -28,7 +28,7 @@ class _SplashScreenState extends State<SplashScreen>
             Navigator.of(context).pushReplacement(
               ThisIsFadeRoute(
                 // ignore: null_check_always_fails
-                route: HomePage(), page: HomePage(),
+                route: const ChooseBatch(), page: const ChooseBatch(),
               ),
             );
             Timer(
@@ -69,9 +69,9 @@ class _SplashScreenState extends State<SplashScreen>
     return Scaffold(
       body: Stack(
         children: [
-          Row(
+          const Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: const [
+            children: [
               Padding(
                 padding: EdgeInsets.only(top: 110),
                 child: Text(

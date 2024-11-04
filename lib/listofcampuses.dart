@@ -5,6 +5,9 @@ import 'package:myapp/aboutus.dart';
 import 'package:myapp/listofgraduates.dart';
 
 class ListofCampuses extends StatefulWidget {
+  final int year;
+
+  const ListofCampuses({super.key, required this.year});
   @override
   _ListofCampusesState createState() => _ListofCampusesState();
 }
@@ -144,8 +147,11 @@ class _ListofCampusesState extends State<ListofCampuses>
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>
-                      ListofGraduates2(campus, campusdescription),
+                  builder: (context) => ListofGraduates2(
+                    campus,
+                    campusdescription,
+                    year: widget.year,
+                  ),
                 ));
           },
           highlightColor: const Color.fromRGBO(0, 0, 0, 0),

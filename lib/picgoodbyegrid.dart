@@ -10,6 +10,9 @@ import 'package:myapp/viewimage.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 
 class PicGoodByeGrid extends StatefulWidget {
+  final int year;
+
+  const PicGoodByeGrid({super.key, required this.year});
   @override
   _PicGoodByeGridState createState() => _PicGoodByeGridState();
 }
@@ -20,8 +23,18 @@ class _PicGoodByeGridState extends State<PicGoodByeGrid> {
   @override
   void initState() {
     super.initState();
+    String collectionName;
+    if (widget.year == 2014) {
+      collectionName = "gcdinner";
+    } else if (widget.year == 2015) {
+      collectionName = "2gcdinner";
+    } else if (widget.year == 2016) {
+      collectionName = "3gcdinner";
+    } else {
+      collectionName = "gcdinner${widget.year - 2013}";
+    }
     stream = FirebaseFirestore.instance
-        .collection("gcdinner")
+        .collection(collectionName)
         .orderBy("number", descending: false)
         .snapshots();
   }
@@ -37,7 +50,6 @@ class _PicGoodByeGridState extends State<PicGoodByeGrid> {
 
     return Scaffold(
       backgroundColor: Colors.black,
-      // const Color(0xffF5F5F5),
       appBar: AppBar(
         backgroundColor: Colors.deepPurple[900],
         elevation: 0,
@@ -68,12 +80,9 @@ class _PicGoodByeGridState extends State<PicGoodByeGrid> {
               Navigator.pushReplacement<void, void>(
                 context,
                 MaterialPageRoute<void>(
-                  builder: (BuildContext context) =>
-                      // push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //     builder: (context) =>
-                      PicGoodByeList(),
+                  builder: (BuildContext context) => PicGoodByeList(
+                    year: widget.year,
+                  ),
                 ),
               );
             },

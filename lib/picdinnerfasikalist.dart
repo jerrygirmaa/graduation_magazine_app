@@ -9,6 +9,9 @@ import 'package:myapp/picdinnerfasikagrid.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 
 class PicDinnerFasikaList extends StatefulWidget {
+  final int year;
+
+  const PicDinnerFasikaList({super.key, required this.year});
   @override
   _PicDinnerFasikaListState createState() => _PicDinnerFasikaListState();
 }
@@ -19,9 +22,18 @@ class _PicDinnerFasikaListState extends State<PicDinnerFasikaList> {
   @override
   void initState() {
     super.initState();
-
+    String collectionName;
+    if (widget.year == 2014) {
+      collectionName = "gcdinnerfasika";
+    } else if (widget.year == 2015) {
+      collectionName = "2gcdinnerfasika";
+    } else if (widget.year == 2016) {
+      collectionName = "3gcdinnerfasika";
+    } else {
+      collectionName = "gcdinnerfasika${widget.year - 2013}";
+    }
     stream = FirebaseFirestore.instance
-        .collection("gcdinnerfasika")
+        .collection(collectionName)
         .orderBy("number", descending: false)
         .snapshots();
   }
@@ -46,7 +58,6 @@ class _PicDinnerFasikaListState extends State<PicDinnerFasikaList> {
               onPressed: () {
                 Navigator.pop(context);
               },
-              // tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
             );
           },
         ),
@@ -66,14 +77,9 @@ class _PicDinnerFasikaListState extends State<PicDinnerFasikaList> {
               Navigator.pushReplacement<void, void>(
                   context,
                   MaterialPageRoute<void>(
-                      builder: (BuildContext context) =>
-                          PicDinnerFasikaGrid()));
-              // push(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (context) => PicDinnerFasikaGrid(),
-              //   ),
-              // );
+                      builder: (BuildContext context) => PicDinnerFasikaGrid(
+                            year: widget.year,
+                          )));
             },
           ),
           IconButton(

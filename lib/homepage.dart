@@ -13,20 +13,32 @@ import 'package:myapp/pictripgrid.dart';
 import 'package:myapp/picyefkrgibzhagrid.dart';
 
 class HomePage extends StatefulWidget {
+  final int year;
+
+  const HomePage({super.key, required this.year});
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
   late Stream<QuerySnapshot> _streamStudents;
-  // late Future<QuerySnapshot> _futureStudents;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+    String collectionName;
+    if (widget.year == 2014) {
+      collectionName = "topscorers";
+    } else if (widget.year == 2015) {
+      collectionName = "2topscorers";
+    } else if (widget.year == 2016) {
+      collectionName = "3topscorers";
+    } else {
+      collectionName = "topscorers${widget.year - 2013}";
+    }
+
     _streamStudents = FirebaseFirestore.instance
-        .collection("topscorers")
+        .collection(collectionName)
         .orderBy("number", descending: false)
         .snapshots();
   }
@@ -59,7 +71,6 @@ class _HomePageState extends State<HomePage> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         const SizedBox(height: 25.0),
-
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
@@ -108,53 +119,26 @@ class _HomePageState extends State<HomePage> {
                           ],
                         ),
                         const SizedBox(height: 20.0),
-
-                        const Center(
+                        Center(
                           child: Text(
-                            "BDU Christian Students Fellowship\n             2021/2022 Graduates",
-                            style: TextStyle(
+                            "BDU Christian Students Fellowship\n                ${widget.year} Graduates",
+                            style: const TextStyle(
                                 fontSize: 16.0,
                                 color: Color(0xffF5F5F5),
                                 fontWeight: FontWeight.bold),
                           ),
                         ),
-
-                        // Container(
-                        //   decoration: BoxDecoration(
-                        //     color: Colors.white,
-                        //     borderRadius: BorderRadius.circular(20.0),
-                        //   ),
-                        //   height: 45.0,
-                        //   margin: const EdgeInsets.symmetric(
-                        //       horizontal: 34.0, vertical: 30.0),
-                        //   // child: const TextField(
-                        //   //   decoration: InputDecoration(
-                        //   //     border: InputBorder.none,
-                        //   //     enabledBorder: InputBorder.none,
-                        //   //     focusedBorder: InputBorder.none,
-                        //   //     hintText: "Search for the best",
-                        //   //     hintStyle: TextStyle(color: Colors.deepPurple),
-                        //   //     contentPadding: EdgeInsets.symmetric(
-                        //   //         horizontal: 16.0, vertical: 14.0),
-                        //   //     suffixIcon: Icon(
-                        //   //       Icons.search,
-                        //   //       size: 14.0,
-                        //   //       color: Colors.grey,
-                        //   //     ),
-                        //   //   ),
-                        //   // ),
-                        // ),
                         const SizedBox(height: 50.0)
                       ],
                     ),
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
+              const Padding(
+                padding: EdgeInsets.all(16.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const <Widget>[
+                  children: <Widget>[
                     Text(
                       "Top scorers and Awardees",
                       style: TextStyle(
@@ -177,17 +161,9 @@ class _HomePageState extends State<HomePage> {
                 child: FutureBuilder(
                     future: Firebase.initializeApp(),
                     builder: (context, snapshot1) {
-                      // if (snapshot.connectionState == ConnectionState.done) {
-                      //   print('connection is successfull');
                       return StreamBuilder<QuerySnapshot>(
                           stream: _streamStudents,
-                          // initialData: ,
-                          // future: _futureStudents,
                           builder: (context, snapshot) {
-                            // if (!snapshot.hasError) {
-                            //   return const Center(
-                            //       child: Text("Check your internet connection"));
-                            // } else
                             if (snapshot.connectionState ==
                                 ConnectionState.waiting) {
                               return ListView(
@@ -269,8 +245,6 @@ class _HomePageState extends State<HomePage> {
                               print("now active");
                               print("active and has data");
                               return ListView.builder(
-                                  // children: snapshot.data!.docs.map((document) {
-
                                   shrinkWrap: true,
                                   scrollDirection: Axis.horizontal,
                                   itemCount: listQueryDocumentSnapshot.length,
@@ -371,11 +345,11 @@ class _HomePageState extends State<HomePage> {
                     }),
               ),
 
-              Padding(
-                padding: const EdgeInsets.all(16.0),
+              const Padding(
+                padding: EdgeInsets.all(16.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const <Widget>[
+                  children: <Widget>[
                     Text(
                       "Categories",
                       style: TextStyle(
@@ -393,12 +367,30 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
               ),
-              getSmallItem("assets/icons/graduate.png", 9, "Magazine",
-                  "Graduation - Aug 27, 2022", ListofCampuses()),
-              getSmallItem("assets/icons/eating.png", 1.2, "GC Dinner Fasika",
-                  "Apr 22, 2022", PicDinnerFasikaGrid()),
-              getSmallItem("assets/icons/dinner.png", 10.7, "GC Good Bye",
-                  "Jul 23, 2022", PicGoodByeGrid()),
+              getSmallItem(
+                  "assets/icons/graduate.png",
+                  9,
+                  "Magazine",
+                  "Graduation - Aug 27, 2022",
+                  ListofCampuses(
+                    year: widget.year,
+                  )),
+              getSmallItem(
+                  "assets/icons/eating.png",
+                  1.2,
+                  "GC Dinner Fasika",
+                  "Apr 22, 2022",
+                  PicDinnerFasikaGrid(
+                    year: widget.year,
+                  )),
+              getSmallItem(
+                  "assets/icons/dinner.png",
+                  10.7,
+                  "GC Good Bye",
+                  "Jul 23, 2022",
+                  PicGoodByeGrid(
+                    year: widget.year,
+                  )),
               getSmallItem("assets/icons/hiking.png", 3, "Tisabay Trip",
                   "Aug 22, 2022", PicTripGrid()),
               getSmallItem("assets/icons/eating.png", 5.7, "YeFeker Gebezha",
@@ -483,9 +475,6 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           onTap: () {
-            // Navigator.of(context).push(MaterialPageRoute(
-            //         builder: (context) => ListofCampuses()))
-
             Navigator.push(
                 context, MaterialPageRoute(builder: (context) => goto));
           },
